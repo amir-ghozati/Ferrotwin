@@ -1,0 +1,26 @@
+# Bicep
+*.bicepconfig.json
+
+# Azure CLI
+.azure/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+env/
+
+# VS Code
+.vscode/
+
+# IntelliJ
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Logs
+*.log
