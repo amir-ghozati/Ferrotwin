@@ -5,12 +5,16 @@ param appInsightsName string
 param storageAccountName string
 param eventGridTopicName string
 param digitalTwinsName string
-//param functionAppName string
-//param postgresServerName string
-//param postgresLocation string
+param functionAppName string
+param functionPlanName string
+param currentUserObjectId string
+param containerAppsEnvironmentName string
+param inferenceAppName string
+param postgresContainerName string
 
-//@secure()
-//param postgresPassword string
+@secure()
+param postgresPassword string
+
 
 module appInsights './modules/applicationInsights.bicep' = {
   name: 'application-insights'
@@ -60,29 +64,55 @@ module digitalTwinsEndpoint './modules/digitalTwinsEndpoint.bicep' = {
 ]
 }
 
-/*module functionApp './modules/functionApp.bicep' = {
+module functionApp './modules/functionApp.bicep' = {
   name: 'function-app'
 
   params: {
     functionAppName: functionAppName
-
+    functionPlanName: functionPlanName
     storageAccountName: storageAccountName
-
     appInsightsName: appInsightsName
-
     location: location
   }
-}*/
+}
 
-
-/*module postgres './modules/postgres.bicep' = {
-  name: 'postgres'
+module roleAssignments './modules/roleAssignments.bicep' = {
+  name: 'rbac'
 
   params: {
-    serverName: postgresServerName
+    digitalTwinsName: digitalTwinsName
+    principalId: currentUserObjectId
 
-    administratorPassword: postgresPassword
-
-    location: postgresLocation
+    functionPrincipalId: functionApp.outputs.principalId
+    storageAccountName: storageAccountName
   }
-}*/
+}
+
+module containerAppsEnvironment './modules/containerAppsEnvironment.bicep' = {
+  name: 'containerapps-env'
+
+  params: {
+    environmentName: containerAppsEnvironmentName
+    location: location
+  }
+}
+module inference './modules/containerApp.bicep' = {
+  name: 'inference'
+
+  params: {
+    appName: inferenceAppName
+    environmentName: containerAppsEnvironmentName
+    location: location
+  }
+}
+
+module postgresContainer './modules/postgresContainer.bicep' = {
+  name: 'postgres-container'
+
+  params: {
+    appName: postgresContainerName
+    environmentName: containerAppsEnvironmentName
+    location: location
+    postgresPassword: postgresPassword
+  }
+}

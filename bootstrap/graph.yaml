@@ -1,0 +1,55 @@
+factory:
+  id: factory01
+  name: FerroTwin Factory
+
+lines:
+  - id: lineA
+    name: Line A
+
+  - id: lineB
+    name: Line B
+
+stages:
+  - id: stage1
+    name: Heating
+
+  - id: stage2
+    name: Rolling
+
+  - id: stage3
+    name: Cooling
+
+  - id: stage4
+    name: Packaging
+
+stations:
+  - id: inspect1
+    name: Camera A
+
+  - id: inspect2
+    name: Camera B
+
+  - id: inspect3
+    name: Camera C
+
+relationships:
+
+  contains:
+    - [factory01, lineA]
+    - [factory01, lineB]
+
+    - [lineA, stage1]
+    - [lineA, stage2]
+
+    - [lineB, stage3]
+    - [lineB, stage4]
+
+  feedsInto:
+    - [stage1, stage2]
+    - [stage2, stage3]
+    - [stage3, stage4]
+
+  inspectedBy:
+    - [stage2, inspect1]
+    - [stage3, inspect2]
+    - [stage4, inspect3]

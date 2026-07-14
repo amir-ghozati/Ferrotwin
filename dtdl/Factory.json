@@ -1,0 +1,18 @@
+{
+  "@id": "dtmi:ferrotwin:Factory;1",
+  "@type": "Interface",
+  "@context": "dtmi:dtdl:context;2",
+  "displayName": "Factory",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "name",
+      "schema": "string"
+    },
+    {
+      "@type": "Relationship",
+      "name": "contains",
+      "target": "dtmi:ferrotwin:ProductionLine;1"
+    }
+  ]
+}

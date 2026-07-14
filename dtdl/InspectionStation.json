@@ -1,0 +1,18 @@
+{
+  "@id": "dtmi:ferrotwin:InspectionStation;1",
+  "@type": "Interface",
+  "@context": "dtmi:dtdl:context;2",
+  "displayName": "InspectionStation",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "name",
+      "schema": "string"
+    },
+    {
+      "@type": "Property",
+      "name": "cameraId",
+      "schema": "string"
+    }
+  ]
+}

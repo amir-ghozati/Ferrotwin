@@ -1,0 +1,87 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.45.6.27763",
+      "templateHash": "1203765742679615579"
+    }
+  },
+  "parameters": {
+    "appName": {
+      "type": "string"
+    },
+    "environmentName": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "postgresPassword": {
+      "type": "securestring"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.App/containerApps",
+      "apiVersion": "2024-03-01",
+      "name": "[parameters('appName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "managedEnvironmentId": "[resourceId('Microsoft.App/managedEnvironments', parameters('environmentName'))]",
+        "configuration": {
+          "ingress": {
+            "external": false
+          },
+          "secrets": [
+            {
+              "name": "postgres-password",
+              "value": "[parameters('postgresPassword')]"
+            }
+          ]
+        },
+        "template": {
+          "volumes": [
+            {
+              "name": "postgres-data",
+              "storageType": "AzureFile",
+              "storageName": "postgres-storage",
+              "mountOptions": "uid=999,gid=999,dir_mode=0750,file_mode=0750,nobrl,mfsymlinks,cache=none"
+            }
+          ],
+          "containers": [
+            {
+              "name": "postgres",
+              "image": "postgres:16",
+              "env": [
+                {
+                  "name": "POSTGRES_USER",
+                  "value": "ferrotwin"
+                },
+                {
+                  "name": "POSTGRES_PASSWORD",
+                  "secretRef": "postgres-password"
+                },
+                {
+                  "name": "POSTGRES_DB",
+                  "value": "ferrotwin"
+                }
+              ],
+              "volumeMounts": [
+                {
+                  "volumeName": "postgres-data",
+                  "mountPath": "/var/lib/postgresql/data"
+                }
+              ],
+              "resources": {
+                "cpu": "0.5",
+                "memory": "1Gi"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

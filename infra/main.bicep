@@ -14,12 +14,16 @@ param storageAccountName string = 'ferrotwinst001'
 
 param eventGridTopicName string
 param digitalTwinsName string
-/*param postgresServerName string
+param functionAppName string
+param functionPlanName string
+param currentUserObjectId string
+param containerAppsEnvironmentName string
+param inferenceAppName string
+param postgresContainerName string
 
 @secure()
 param postgresPassword string
-param postgresLocation string
-*/
+
 resource rg 'Microsoft.Resources/resourceGroups@2024-11-01' = {
   name: resourceGroupName
   location: location
@@ -36,10 +40,16 @@ module workload './workload.bicep' = {
     storageAccountName: storageAccountName
     eventGridTopicName: eventGridTopicName
     digitalTwinsName: digitalTwinsName
-    /*functionAppName: functionAppName
-    postgresServerName: postgresServerName
+    functionAppName: functionAppName
+    functionPlanName: functionPlanName
+    /*postgresServerName: postgresServerName
     postgresPassword: postgresPassword
     postgresLocation: postgresLocation*/
+    currentUserObjectId: currentUserObjectId
+    containerAppsEnvironmentName: containerAppsEnvironmentName
+    inferenceAppName: inferenceAppName
+    postgresContainerName: postgresContainerName
+    postgresPassword: postgresPassword
   }
 
   dependsOn: [

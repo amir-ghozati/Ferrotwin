@@ -19,6 +19,24 @@
     },
     "digitalTwinsName": {
     "value": "ferrotwin-adt"
+    },
+    "currentUserObjectId": {
+  "value": "4b6dcfe8-715e-49e6-b4d6-7448ff2e6385"
+    },
+    "functionAppName": {
+    "value": "ferrotwin-func"
+    },
+    "functionPlanName": {
+    "value": "ferrotwin-func-plan"
+    },
+    "containerAppsEnvironmentName": {
+      "value": "ferrotwin-env"
+    },
+    "inferenceAppName": {
+      "value": "ferrotwin-inference"
+    },
+    "postgresContainerName": {
+      "value": "ferrotwin-postgres"
     }
   }
 }

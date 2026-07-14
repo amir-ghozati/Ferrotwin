@@ -1,0 +1,694 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.45.6.27763",
+      "templateHash": "10462928325635934349"
+    }
+  },
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "westeurope",
+      "metadata": {
+        "description": "Deployment location"
+      }
+    },
+    "resourceGroupName": {
+      "type": "string",
+      "defaultValue": "ferrotwin-rg",
+      "metadata": {
+        "description": "Resource Group name"
+      }
+    },
+    "appInsightsName": {
+      "type": "string",
+      "defaultValue": "ferrotwin-ai",
+      "metadata": {
+        "description": "Application Insights name"
+      }
+    },
+    "storageAccountName": {
+      "type": "string",
+      "defaultValue": "ferrotwinst001",
+      "metadata": {
+        "description": "Storage Account name"
+      }
+    },
+    "eventGridTopicName": {
+      "type": "string"
+    },
+    "digitalTwinsName": {
+      "type": "string"
+    },
+    "functionAppName": {
+      "type": "string"
+    },
+    "functionPlanName": {
+      "type": "string"
+    },
+    "currentUserObjectId": {
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2024-11-01",
+      "name": "[parameters('resourceGroupName')]",
+      "location": "[parameters('location')]"
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2025-04-01",
+      "name": "workload",
+      "resourceGroup": "[parameters('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "appInsightsName": {
+            "value": "[parameters('appInsightsName')]"
+          },
+          "storageAccountName": {
+            "value": "[parameters('storageAccountName')]"
+          },
+          "eventGridTopicName": {
+            "value": "[parameters('eventGridTopicName')]"
+          },
+          "digitalTwinsName": {
+            "value": "[parameters('digitalTwinsName')]"
+          },
+          "functionAppName": {
+            "value": "[parameters('functionAppName')]"
+          },
+          "functionPlanName": {
+            "value": "[parameters('functionPlanName')]"
+          },
+          "currentUserObjectId": {
+            "value": "[parameters('currentUserObjectId')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.45.6.27763",
+              "templateHash": "15709231301303821580"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string"
+            },
+            "appInsightsName": {
+              "type": "string"
+            },
+            "storageAccountName": {
+              "type": "string"
+            },
+            "eventGridTopicName": {
+              "type": "string"
+            },
+            "digitalTwinsName": {
+              "type": "string"
+            },
+            "functionAppName": {
+              "type": "string"
+            },
+            "functionPlanName": {
+              "type": "string"
+            },
+            "currentUserObjectId": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2025-04-01",
+              "name": "application-insights",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "appInsightsName": {
+                    "value": "[parameters('appInsightsName')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.45.6.27763",
+                      "templateHash": "6389632686393536057"
+                    }
+                  },
+                  "parameters": {
+                    "appInsightsName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Application Insights name"
+                      }
+                    },
+                    "location": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Azure location"
+                      }
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Insights/components",
+                      "apiVersion": "2020-02-02",
+                      "name": "[parameters('appInsightsName')]",
+                      "location": "[parameters('location')]",
+                      "kind": "web",
+                      "properties": {
+                        "Application_Type": "web"
+                      }
+                    }
+                  ],
+                  "outputs": {
+                    "instrumentationKey": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), '2020-02-02').InstrumentationKey]"
+                    },
+                    "connectionString": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), '2020-02-02').ConnectionString]"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2025-04-01",
+              "name": "storage",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "storageAccountName": {
+                    "value": "[parameters('storageAccountName')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.45.6.27763",
+                      "templateHash": "6343531953452065210"
+                    }
+                  },
+                  "parameters": {
+                    "storageAccountName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Storage Account name"
+                      }
+                    },
+                    "location": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Azure location"
+                      }
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Storage/storageAccounts",
+                      "apiVersion": "2024-01-01",
+                      "name": "[parameters('storageAccountName')]",
+                      "location": "[parameters('location')]",
+                      "sku": {
+                        "name": "Standard_LRS"
+                      },
+                      "kind": "StorageV2",
+                      "properties": {
+                        "accessTier": "Hot",
+                        "allowBlobPublicAccess": false,
+                        "minimumTlsVersion": "TLS1_2",
+                        "supportsHttpsTrafficOnly": true
+                      }
+                    },
+                    {
+                      "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+                      "apiVersion": "2024-01-01",
+                      "name": "[format('{0}/default/pool', parameters('storageAccountName'))]",
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+                      ]
+                    }
+                  ],
+                  "outputs": {
+                    "storageId": {
+                      "type": "string",
+                      "value": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+                    },
+                    "storageName": {
+                      "type": "string",
+                      "value": "[parameters('storageAccountName')]"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2025-04-01",
+              "name": "event-grid",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "topicName": {
+                    "value": "[parameters('eventGridTopicName')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.45.6.27763",
+                      "templateHash": "11419294653283760099"
+                    }
+                  },
+                  "parameters": {
+                    "topicName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Event Grid Topic name"
+                      }
+                    },
+                    "location": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Deployment location"
+                      }
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.EventGrid/topics",
+                      "apiVersion": "2025-02-15",
+                      "name": "[parameters('topicName')]",
+                      "location": "[parameters('location')]",
+                      "identity": {
+                        "type": "SystemAssigned"
+                      }
+                    }
+                  ],
+                  "outputs": {
+                    "topicId": {
+                      "type": "string",
+                      "value": "[resourceId('Microsoft.EventGrid/topics', parameters('topicName'))]"
+                    },
+                    "topicEndpoint": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.EventGrid/topics', parameters('topicName')), '2025-02-15').endpoint]"
+                    },
+                    "topicName": {
+                      "type": "string",
+                      "value": "[parameters('topicName')]"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2025-04-01",
+              "name": "digital-twins",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "digitalTwinsName": {
+                    "value": "[parameters('digitalTwinsName')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.45.6.27763",
+                      "templateHash": "12076551529841372678"
+                    }
+                  },
+                  "parameters": {
+                    "digitalTwinsName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Azure Digital Twins instance name"
+                      }
+                    },
+                    "location": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Deployment location"
+                      }
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.DigitalTwins/digitalTwinsInstances",
+                      "apiVersion": "2023-01-31",
+                      "name": "[parameters('digitalTwinsName')]",
+                      "location": "[parameters('location')]",
+                      "identity": {
+                        "type": "SystemAssigned"
+                      },
+                      "properties": {
+                        "publicNetworkAccess": "Enabled"
+                      }
+                    }
+                  ],
+                  "outputs": {
+                    "id": {
+                      "type": "string",
+                      "value": "[resourceId('Microsoft.DigitalTwins/digitalTwinsInstances', parameters('digitalTwinsName'))]"
+                    },
+                    "hostName": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.DigitalTwins/digitalTwinsInstances', parameters('digitalTwinsName')), '2023-01-31').hostName]"
+                    },
+                    "principalId": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.DigitalTwins/digitalTwinsInstances', parameters('digitalTwinsName')), '2023-01-31', 'full').identity.principalId]"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2025-04-01",
+              "name": "adt-endpoint",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "digitalTwinsName": {
+                    "value": "[parameters('digitalTwinsName')]"
+                  },
+                  "topicName": {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'event-grid'), '2025-04-01').outputs.topicName.value]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.45.6.27763",
+                      "templateHash": "7722293640171100994"
+                    }
+                  },
+                  "parameters": {
+                    "digitalTwinsName": {
+                      "type": "string"
+                    },
+                    "topicName": {
+                      "type": "string"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.DigitalTwins/digitalTwinsInstances/endpoints",
+                      "apiVersion": "2023-01-31",
+                      "name": "[format('{0}/{1}', parameters('digitalTwinsName'), 'eventgrid')]",
+                      "properties": {
+                        "endpointType": "EventGrid",
+                        "authenticationType": "KeyBased",
+                        "TopicEndpoint": "[reference(resourceId('Microsoft.EventGrid/topics', parameters('topicName')), '2025-02-15').endpoint]",
+                        "accessKey1": "[listKeys(resourceId('Microsoft.EventGrid/topics', parameters('topicName')), '2025-02-15').key1]"
+                      }
+                    }
+                  ]
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'digital-twins')]",
+                "[resourceId('Microsoft.Resources/deployments', 'event-grid')]"
+              ]
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2025-04-01",
+              "name": "function-app",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "functionAppName": {
+                    "value": "[parameters('functionAppName')]"
+                  },
+                  "functionPlanName": {
+                    "value": "[parameters('functionPlanName')]"
+                  },
+                  "storageAccountName": {
+                    "value": "[parameters('storageAccountName')]"
+                  },
+                  "appInsightsName": {
+                    "value": "[parameters('appInsightsName')]"
+                  },
+                  "location": {
+                    "value": "[parameters('location')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.45.6.27763",
+                      "templateHash": "8358914606979773683"
+                    }
+                  },
+                  "parameters": {
+                    "functionAppName": {
+                      "type": "string"
+                    },
+                    "functionPlanName": {
+                      "type": "string"
+                    },
+                    "storageAccountName": {
+                      "type": "string"
+                    },
+                    "appInsightsName": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Web/serverfarms",
+                      "apiVersion": "2024-04-01",
+                      "name": "[parameters('functionPlanName')]",
+                      "location": "[parameters('location')]",
+                      "sku": {
+                        "name": "Y1",
+                        "tier": "Dynamic"
+                      },
+                      "kind": "linux",
+                      "properties": {
+                        "reserved": true
+                      }
+                    },
+                    {
+                      "type": "Microsoft.Web/sites",
+                      "apiVersion": "2024-04-01",
+                      "name": "[parameters('functionAppName')]",
+                      "location": "[parameters('location')]",
+                      "kind": "functionapp,linux",
+                      "identity": {
+                        "type": "SystemAssigned"
+                      },
+                      "properties": {
+                        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('functionPlanName'))]",
+                        "httpsOnly": true,
+                        "siteConfig": {
+                          "linuxFxVersion": "Python|3.12",
+                          "appSettings": [
+                            {
+                              "name": "FUNCTIONS_WORKER_RUNTIME",
+                              "value": "python"
+                            },
+                            {
+                              "name": "FUNCTIONS_EXTENSION_VERSION",
+                              "value": "~4"
+                            },
+                            {
+                              "name": "AzureWebJobsStorage",
+                              "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1};EndpointSuffix={2}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2024-01-01').keys[0].value, environment().suffixes.storage)]"
+                            },
+                            {
+                              "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+                              "value": "[reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), '2020-02-02').ConnectionString]"
+                            }
+                          ]
+                        }
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Web/serverfarms', parameters('functionPlanName'))]"
+                      ]
+                    }
+                  ],
+                  "outputs": {
+                    "principalId": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.Web/sites', parameters('functionAppName')), '2024-04-01', 'full').identity.principalId]"
+                    },
+                    "functionName": {
+                      "type": "string",
+                      "value": "[parameters('functionAppName')]"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2025-04-01",
+              "name": "rbac",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "digitalTwinsName": {
+                    "value": "[parameters('digitalTwinsName')]"
+                  },
+                  "principalId": {
+                    "value": "[parameters('currentUserObjectId')]"
+                  },
+                  "functionPrincipalId": {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'function-app'), '2025-04-01').outputs.principalId.value]"
+                  },
+                  "storageAccountName": {
+                    "value": "[parameters('storageAccountName')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.45.6.27763",
+                      "templateHash": "18333848670682201791"
+                    }
+                  },
+                  "parameters": {
+                    "digitalTwinsName": {
+                      "type": "string"
+                    },
+                    "principalId": {
+                      "type": "string"
+                    },
+                    "functionPrincipalId": {
+                      "type": "string"
+                    },
+                    "storageAccountName": {
+                      "type": "string"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Authorization/roleAssignments",
+                      "apiVersion": "2022-04-01",
+                      "scope": "[resourceId('Microsoft.DigitalTwins/digitalTwinsInstances', parameters('digitalTwinsName'))]",
+                      "name": "[guid(resourceId('Microsoft.DigitalTwins/digitalTwinsInstances', parameters('digitalTwinsName')), parameters('principalId'), 'Azure Digital Twins Data Owner')]",
+                      "properties": {
+                        "principalId": "[parameters('principalId')]",
+                        "principalType": "User",
+                        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'bcd981a7-7f74-457b-83e1-cceb9e632ffe')]"
+                      }
+                    },
+                    {
+                      "type": "Microsoft.Authorization/roleAssignments",
+                      "apiVersion": "2022-04-01",
+                      "scope": "[resourceId('Microsoft.DigitalTwins/digitalTwinsInstances', parameters('digitalTwinsName'))]",
+                      "name": "[guid(resourceId('Microsoft.DigitalTwins/digitalTwinsInstances', parameters('digitalTwinsName')), parameters('functionPrincipalId'), 'Azure Digital Twins Data Owner')]",
+                      "properties": {
+                        "principalId": "[parameters('functionPrincipalId')]",
+                        "principalType": "ServicePrincipal",
+                        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'bcd981a7-7f74-457b-83e1-cceb9e632ffe')]"
+                      }
+                    },
+                    {
+                      "type": "Microsoft.Authorization/roleAssignments",
+                      "apiVersion": "2022-04-01",
+                      "scope": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+                      "name": "[guid(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), parameters('functionPrincipalId'), 'Storage Blob Data Reader')]",
+                      "properties": {
+                        "principalId": "[parameters('functionPrincipalId')]",
+                        "principalType": "ServicePrincipal",
+                        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '2a2b9908-6ea1-4ae2-8e65-a410df84e7d1')]"
+                      }
+                    }
+                  ]
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'function-app')]"
+              ]
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroupName'))]"
+      ]
+    }
+  ]
+}

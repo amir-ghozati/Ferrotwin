@@ -1,0 +1,33 @@
+{
+  "@id": "dtmi:ferrotwin:ProcessStage;1",
+  "@type": "Interface",
+  "@context": "dtmi:dtdl:context;2",
+  "displayName": "ProcessStage",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "name",
+      "schema": "string"
+    },
+    {
+      "@type": "Property",
+      "name": "status",
+      "schema": "string"
+    },
+    {
+      "@type": "Property",
+      "name": "temperature",
+      "schema": "double"
+    },
+    {
+      "@type": "Relationship",
+      "name": "feedsInto",
+      "target": "dtmi:ferrotwin:ProcessStage;1"
+    },
+    {
+      "@type": "Relationship",
+      "name": "contains",
+      "target": "dtmi:ferrotwin:InspectionStation;1"
+    }
+  ]
+}
