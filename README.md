@@ -16,3 +16,5 @@ Digital Twin platform for ferroalloy process monitoring.
 ## Deployment
 
 Infrastructure is deployed using Azure Bicep.
+
+Event Grid integration is currently under investigation. HTTP ingestion is temporarily used for telemetry.
