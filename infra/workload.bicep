@@ -11,6 +11,8 @@ param currentUserObjectId string
 param containerAppsEnvironmentName string
 param inferenceAppName string
 param postgresContainerName string
+param adtHost string
+param dashboardAllowedOrigin string
 
 @secure()
 param postgresPassword string
@@ -73,8 +75,12 @@ module functionApp './modules/functionApp.bicep' = {
     storageAccountName: storageAccountName
     appInsightsName: appInsightsName
     location: location
+    adtHost: adtHost
+    eventGridTopicName: eventGridTopicName
+    dashboardAllowedOrigin: dashboardAllowedOrigin
   }
 }
+
 
 module roleAssignments './modules/roleAssignments.bicep' = {
   name: 'rbac'

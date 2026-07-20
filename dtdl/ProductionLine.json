@@ -1,5 +1,5 @@
 {
-  "@id": "dtmi:ferrotwin:ProductionLine;1",
+  "@id": "dtmi:ferrotwin:ProductionLine;3",
   "@type": "Interface",
   "@context": "dtmi:dtdl:context;2",
   "displayName": "ProductionLine",
@@ -12,7 +12,7 @@
     {
       "@type": "Relationship",
       "name": "contains",
-      "target": "dtmi:ferrotwin:ProcessStage;1"
+      "target": "dtmi:ferrotwin:ProcessStage;3"
     }
   ]
 }

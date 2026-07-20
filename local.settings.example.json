@@ -1,0 +1,26 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "python",
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "ADT_HOST": "https://<your-adt-instance>.api.weu.digitaltwins.azure.net",
+    "STORAGE_ACCOUNT_NAME": "<your-storage-account>",
+    "INSPECTION_BLOB_CONTAINER": "inspections",
+
+    "EVENT_GRID_ENABLED": "false",
+    "EVENT_GRID_TOPIC_ENDPOINT": "https://<topic>.<region>-1.eventgrid.azure.net/api/events",
+    "EVENT_GRID_TOPIC_KEY": "<topic-access-key>",
+
+    "TEMPERATURE_ALERT_THRESHOLD": "900",
+    "TEMPERATURE_MIN_THRESHOLD": "",
+    "TEMPERATURE_SPIKE_DELTA": "45",
+    "TEMPERATURE_SPIKE_MIN_SAMPLES": "3",
+    "REPEATED_DEFECT_COUNT": "3",
+    "REPEATED_DEFECT_WINDOW_MINUTES": "30",
+    "CONFIDENCE_ALERT_THRESHOLD": "0.60",
+
+    "STALE_TELEMETRY_SECONDS": "120",
+    "IDLE_ALERT_MINUTES": "15",
+    "ALARM_DEBOUNCE_SECONDS": "300"
+  }
+}

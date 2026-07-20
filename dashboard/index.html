@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="FerroTwin — smart steel manufacturing digital twin operations center" />
+    <title>FerroTwin · Operations Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="bg-grid" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">F</span>
+        <div class="brand-text"><span class="brand-name">FerroTwin</span><span class="brand-sub">OPERATIONS CENTER</span></div>
+      </div>
+      <div class="topbar-meta">
+        <div class="meta-pill"><span class="meta-label">FACTORY</span><span id="meta-factory" class="meta-value">—</span></div>
+        <div class="meta-pill"><span class="meta-label">MODEL</span><span id="meta-model" class="meta-value">ResNet18 · ONNX</span></div>
+        <div class="meta-pill"><span class="meta-label">INGESTION</span><span id="meta-eventmode" class="meta-value">—</span></div>
+      </div>
+      <div class="topbar-actions">
+        <div id="refresh-indicator" class="refresh-indicator" title="Auto-refresh">
+          <span class="dot"></span><span id="refresh-countdown">—</span>
+        </div>
+        <button id="pause-button" class="button ghost" title="Pause auto-refresh">Pause</button>
+        <span id="connection-status" class="connection offline">Offline</span>
+        <button id="configure-button" class="button">Connect API</button>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="page-heading">
+        <div>
+          <p class="eyebrow">🟢 LIVE</p>
+          <h1>Factory 01 <span class="divider-slash">/</span> Line 01</h1>
+          <p id="last-updated" class="muted">Connect the API to begin streaming.</p>
+        </div>
+        <button id="refresh-button" class="button secondary">↻ Refresh now</button>
+      </section>
+
+      <section id="alert-banner" class="alert-banner hidden"></section>
+
+      <!-- KPI STRIP -->
+      <section class="kpi-grid" aria-label="Key performance indicators">
+        <article class="kpi-card accent-green">
+          <div class="kpi-top"><span class="kpi-label">Avg temperature</span><span class="kpi-icon">🌡</span></div>
+          <strong id="kpi-avg-temp">—</strong>
+          <small>across recent readings</small>
+        </article>
+        <article class="kpi-card accent-amber">
+          <div class="kpi-top"><span class="kpi-label">Peak temperature</span><span class="kpi-icon">▲</span></div>
+          <strong id="kpi-max-temp">—</strong>
+          <small id="kpi-max-temp-sub">observed maximum</small>
+        </article>
+        <article class="kpi-card accent-blue">
+          <div class="kpi-top"><span class="kpi-label">Inspections</span><span class="kpi-icon">◎</span></div>
+          <strong id="kpi-inspections">—</strong>
+          <small>AI vision events logged</small>
+        </article>
+        <article class="kpi-card accent-purple">
+          <div class="kpi-top"><span class="kpi-label">Defect rate</span><span class="kpi-icon">%</span></div>
+          <strong id="kpi-defect-rate">—</strong>
+          <small>defects / readings</small>
+        </article>
+        <article class="kpi-card accent-red">
+          <div class="kpi-top"><span class="kpi-label">Open alarms</span><span class="kpi-icon">⚠</span></div>
+          <strong id="kpi-alarms">—</strong>
+          <small id="kpi-alarms-sub">last 100 events</small>
+        </article>
+        <article class="kpi-card accent-teal">
+          <div class="kpi-top"><span class="kpi-label">Top defect</span><span class="kpi-icon">◨</span></div>
+          <strong id="kpi-top-defect" class="kpi-text">—</strong>
+          <small id="kpi-top-defect-sub">most frequent class</small>
+        </article>
+      </section>
+
+      <!-- FACTORY FLOW -->
+      <section class="panel factory-panel">
+        <div class="panel-title">
+          <div><p class="eyebrow">REAL-TIME FLOW</p><h2>Production line</h2></div>
+          <span class="tag live-tag"><span class="live-dot"></span>Live twin state</span>
+        </div>
+        <div class="stage-flow" id="stages"></div>
+      </section>
+
+      <!-- CHARTS ROW 1 -->
+      <section class="grid-2">
+        <article class="panel">
+          <div class="panel-title">
+            <div><p class="eyebrow">TELEMETRY</p><h2>Temperature trend</h2></div>
+            <div class="legend" id="temp-legend"></div>
+          </div>
+          <div class="chart-holder"><canvas id="temperature-chart"></canvas></div>
+        </article>
+        <article class="panel">
+          <div class="panel-title">
+            <div><p class="eyebrow">AI VISION</p><h2>Defect distribution</h2></div>
+            <span id="defect-total" class="tag">—</span>
+          </div>
+          <div class="chart-holder donut-holder"><canvas id="defect-donut"></canvas></div>
+        </article>
+      </section>
+
+      <!-- CHARTS ROW 2 -->
+      <section class="grid-2">
+        <article class="panel">
+          <div class="panel-title">
+            <div><p class="eyebrow">QUALITY OVER TIME</p><h2>Inspections &amp; defects</h2></div>
+          </div>
+          <div class="chart-holder"><canvas id="defect-timeline"></canvas></div>
+        </article>
+        <article class="panel inspection-panel">
+          <div class="panel-title">
+            <div><p class="eyebrow">LATEST INSPECTION</p><h2>AI vision result</h2></div>
+            <span id="inspection-confidence" class="tag">—</span>
+          </div>
+          <div class="inspection-content">
+            <div id="inspection-image-wrap" class="inspection-image-wrap"><span>No image yet</span></div>
+            <div class="inspection-body">
+              <div id="inspection-details" class="inspection-details"><strong>—</strong><span>No inspection history found.</span></div>
+              <div class="confidence-meter"><div class="confidence-track"><div id="confidence-fill" class="confidence-fill"></div></div><span id="confidence-text" class="muted">—</span></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- BOTTOM GRID -->
+      <section class="grid-2 bottom-grid">
+        <article class="panel">
+          <div class="panel-title">
+            <div><p class="eyebrow">ALARM ENGINE</p><h2>Recent alarms</h2></div>
+            <span id="alarm-count" class="tag danger">0</span>
+          </div>
+          <div id="alarms" class="alarm-list"><p class="empty-state">No alarms loaded.</p></div>
+        </article>
+        <article class="panel">
+          <div class="panel-title">
+            <div><p class="eyebrow">DIGITAL TWIN</p><h2>Twin explorer</h2></div>
+            <span id="twin-count" class="tag">0</span>
+          </div>
+          <div id="twin-explorer" class="twin-explorer"><p class="empty-state">Connect the API to inspect twins.</p></div>
+        </article>
+      </section>
+
+      <section class="grid-2 bottom-grid">
+        <article class="panel">
+          <div class="panel-title"><div><p class="eyebrow">AI INSPECTION</p><h2>Run an inspection</h2></div></div>
+          <form id="inspection-form" class="inspection-form">
+            <label>Target stage<select id="inspection-stage"></select></label>
+            <label>Inspection image<input id="inspection-file" type="file" accept="image/jpeg,image/png,image/bmp" required /></label>
+            <button class="button" type="submit">Analyze image</button>
+            <p id="inspection-result" class="muted" role="status"></p>
+          </form>
+        </article>
+        <article class="panel">
+          <div class="panel-title"><div><p class="eyebrow">HISTORY</p><h2>Recent inspections</h2></div></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Time</th><th>Stage</th><th>Defect</th><th>Confidence</th></tr></thead>
+              <tbody id="inspection-history"><tr><td colspan="4" class="empty-state">No history loaded.</td></tr></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <footer class="page-footer">
+        <span>FerroTwin · Azure Digital Twins + ONNX vision</span>
+        <span id="footer-health" class="muted">Not connected</span>
+      </footer>
+    </main>
+
+    <dialog id="configuration-dialog" class="configuration-dialog">
+      <form id="configuration-form" method="dialog">
+        <div class="dialog-heading">
+          <div><p class="eyebrow">SECURE SESSION</p><h2>Connect FerroTwin API</h2></div>
+          <button type="button" id="close-dialog" class="icon-button" aria-label="Close">×</button>
+        </div>
+        <label>Function API base URL<input id="api-url" type="url" placeholder="https://ferrotwin-func.azurewebsites.net/api" required /></label>
+        <label>Function key<input id="function-key" type="password" placeholder="Stored only in this browser tab" required /></label>
+        <p class="muted">The key stays in session storage and is sent only in the <code>x-functions-key</code> header. Nothing is committed to source control.</p>
+        <button class="button full" value="connect">Connect</button>
+      </form>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>

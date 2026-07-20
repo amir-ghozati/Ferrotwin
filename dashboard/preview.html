@@ -1,0 +1,776 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>FerroTwin - Live Preview (mock data)</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet"/><script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script><style>:root {
+  --bg: #070b10;
+  --bg-2: #0a1017;
+  --surface: #101922;
+  --surface-2: #16222d;
+  --line: #223441;
+  --line-soft: #1a2934;
+  --text: #eef4f6;
+  --muted: #8ba1ab;
+  --accent: #3ddc97;
+  --amber: #ffb454;
+  --danger: #ff5f6d;
+  --blue: #4aa8ff;
+  --purple: #b48ead;
+  --teal: #35d0d6;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--text);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--bg);
+  position: relative;
+  overflow-x: hidden;
+}
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 82% -8%, rgba(61,220,151,.10), transparent 34rem),
+    radial-gradient(circle at 8% 110%, rgba(74,168,255,.08), transparent 38rem),
+    linear-gradient(rgba(34,52,65,.14) 1px, transparent 1px) 0 0 / 100% 46px,
+    var(--bg);
+}
+button, input, select { font: inherit; }
+code { font-family: "JetBrains Mono", monospace; font-size: .9em; color: var(--accent); }
+
+/* TOPBAR */
+.topbar {
+  height: 68px;
+  border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 0 clamp(18px, 3vw, 44px);
+  background: rgba(8,13,18,.86);
+  backdrop-filter: blur(18px);
+  position: sticky; top: 0; z-index: 20;
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-mark {
+  width: 36px; height: 36px; display: grid; place-items: center;
+  border-radius: 10px; color: #04140d; font-weight: 900; font-size: 19px;
+  background: linear-gradient(135deg, var(--accent), #2bb87c);
+  box-shadow: 0 4px 18px rgba(61,220,151,.35);
+}
+.brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+.brand-name { font-weight: 800; font-size: 18px; letter-spacing: -.03em; }
+.brand-sub { font-size: 9px; letter-spacing: .16em; color: var(--muted); }
+.topbar-meta { display: flex; gap: 10px; margin-left: auto; }
+.meta-pill {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 6px 12px; border: 1px solid var(--line-soft); border-radius: 9px;
+  background: rgba(22,34,45,.5);
+}
+.meta-label { font-size: 8.5px; letter-spacing: .13em; color: var(--muted); }
+.meta-value { font-size: 12.5px; font-weight: 700; }
+.topbar-actions { display: flex; align-items: center; gap: 12px; }
+.refresh-indicator { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); font-family: "JetBrains Mono", monospace; }
+.refresh-indicator .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
+.refresh-indicator.active .dot { background: var(--accent); box-shadow: 0 0 10px var(--accent); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+.connection { font-size: 12.5px; font-weight: 700; display: inline-flex; align-items: center; }
+.connection::before { content: ""; width: 8px; height: 8px; border-radius: 50%; margin-right: 7px; background: var(--muted); }
+.connection.online::before { background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+.connection.error::before { background: var(--danger); box-shadow: 0 0 12px var(--danger); }
+.connection.offline { color: var(--muted); }
+
+/* BUTTONS */
+.button {
+  border: 0; cursor: pointer; border-radius: 9px; white-space: nowrap;
+  background: linear-gradient(135deg, var(--accent), #2bb87c); color: #04140d;
+  font-weight: 800; padding: 9px 16px; transition: filter .18s, transform .18s;
+}
+.button:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.button.secondary { background: transparent; color: var(--text); border: 1px solid var(--line); }
+.button.ghost { background: transparent; color: var(--muted); border: 1px solid var(--line-soft); padding: 8px 12px; }
+.button.ghost:hover { color: var(--text); }
+.button.full { width: 100%; padding: 12px; }
+
+/* SHELL */
+.shell { max-width: 1460px; margin: auto; padding: 34px clamp(18px, 3vw, 44px) 40px; }
+.page-heading, .panel-title, .dialog-heading { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+.page-heading { margin-bottom: 24px; }
+.eyebrow { font-size: 10.5px; letter-spacing: .14em; color: var(--accent); font-weight: 800; margin: 0 0 8px; }
+.page-heading h1, h2 { margin: 0; letter-spacing: -.035em; }
+.page-heading h1 { font-size: clamp(26px, 3.4vw, 38px); font-weight: 800; }
+.divider-slash { color: var(--line); font-weight: 400; }
+h2 { font-size: 18px; font-weight: 700; }
+.muted { color: var(--muted); font-size: 13px; margin: 8px 0 0; }
+
+/* KPI GRID */
+.kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 13px; margin-bottom: 16px; }
+.kpi-card {
+  position: relative; overflow: hidden;
+  background: linear-gradient(150deg, rgba(22,34,45,.92), rgba(13,22,30,.96));
+  border: 1px solid var(--line); border-radius: 14px; padding: 16px 17px;
+}
+.kpi-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--muted); }
+.kpi-card.accent-green::before { background: var(--accent); }
+.kpi-card.accent-amber::before { background: var(--amber); }
+.kpi-card.accent-blue::before { background: var(--blue); }
+.kpi-card.accent-purple::before { background: var(--purple); }
+.kpi-card.accent-red::before { background: var(--danger); }
+.kpi-card.accent-teal::before { background: var(--teal); }
+.kpi-top { display: flex; align-items: center; justify-content: space-between; }
+.kpi-label { font-size: 11.5px; color: var(--muted); font-weight: 600; }
+.kpi-icon { font-size: 13px; opacity: .6; }
+.kpi-card strong { display: block; font-size: 29px; font-weight: 800; letter-spacing: -.05em; margin: 9px 0 3px; }
+.kpi-card strong.kpi-text { font-size: 20px; text-transform: capitalize; }
+.kpi-card small { color: var(--muted); font-size: 11px; }
+
+/* PANEL */
+.panel {
+  background: linear-gradient(150deg, rgba(19,30,40,.9), rgba(12,20,27,.96));
+  border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; margin-top: 16px;
+}
+.panel-title { margin-bottom: 4px; }
+.tag { color: var(--blue); border: 1px solid rgba(74,168,255,.3); background: rgba(74,168,255,.1); border-radius: 100px; padding: 5px 11px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.tag.danger { color: var(--danger); border-color: rgba(255,95,109,.38); background: rgba(255,95,109,.1); }
+.live-tag { color: var(--accent); border-color: rgba(61,220,151,.32); background: rgba(61,220,151,.1); display: inline-flex; align-items: center; gap: 7px; }
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); animation: pulse 1.8s infinite; }
+
+/* FACTORY FLOW */
+.factory-panel { margin-top: 16px; }
+.stage-flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 18px; }
+.stage-card {
+  position: relative; border: 1px solid var(--line); background: rgba(10,17,23,.7);
+  border-radius: 13px; padding: 18px; display: flex; flex-direction: column; gap: 12px;
+}
+.stage-card.running { border-color: rgba(61,220,151,.4); }
+.stage-card.error { border-color: rgba(255,95,109,.55); box-shadow: 0 0 0 1px rgba(255,95,109,.2); }
+.stage-card:not(:first-child)::before {
+  content: "›"; position: absolute; left: -13px; top: 50%; transform: translateY(-50%);
+  color: var(--line); font-size: 22px; font-weight: 700;
+}
+.stage-head { display: flex; align-items: center; justify-content: space-between; }
+.stage-head h3 { font-size: 14px; margin: 0; }
+.stage-status { font-size: 9.5px; text-transform: uppercase; letter-spacing: .05em; border-radius: 99px; padding: 4px 8px; background: rgba(139,161,171,.14); color: var(--muted); font-weight: 700; }
+.stage-status.running { background: rgba(61,220,151,.15); color: var(--accent); }
+.stage-status.error { background: rgba(255,95,109,.15); color: var(--danger); }
+.stage-temp { display: flex; align-items: baseline; gap: 4px; }
+.stage-temp b { font-size: 30px; font-weight: 800; letter-spacing: -.05em; }
+.stage-temp span { color: var(--muted); font-size: 14px; }
+.stage-gauge { height: 6px; border-radius: 4px; background: rgba(139,161,171,.14); overflow: hidden; }
+.stage-gauge > div { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--amber)); transition: width .5s; }
+.stage-defect { font-size: 11.5px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.stage-defect .chip { text-transform: capitalize; color: var(--text); background: rgba(255,180,84,.12); border: 1px solid rgba(255,180,84,.25); border-radius: 6px; padding: 2px 7px; font-size: 10.5px; font-weight: 600; }
+.stage-defect .chip.ok { color: var(--accent); background: rgba(61,220,151,.1); border-color: rgba(61,220,151,.25); }
+
+/* GRID + CHARTS */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-2 > .panel { margin-top: 0; }
+.grid-2 { margin-top: 16px; }
+.chart-holder { position: relative; height: 260px; margin-top: 14px; }
+.donut-holder { height: 260px; }
+.legend { display: flex; gap: 12px; flex-wrap: wrap; }
+.legend span { font-size: 11px; color: var(--muted); display: inline-flex; align-items: center; gap: 5px; }
+.legend span i { width: 9px; height: 9px; border-radius: 3px; display: inline-block; }
+
+/* INSPECTION */
+.inspection-content { display: grid; grid-template-columns: 150px 1fr; gap: 20px; margin-top: 16px; align-items: center; }
+.inspection-image-wrap { height: 150px; border-radius: 12px; background: #070d12; border: 1px dashed var(--line); display: grid; place-items: center; color: var(--muted); font-size: 12px; overflow: hidden; }
+.inspection-image-wrap img { width: 100%; height: 100%; object-fit: cover; }
+.inspection-body { display: flex; flex-direction: column; gap: 16px; }
+.inspection-details strong { font-size: 26px; display: block; text-transform: capitalize; letter-spacing: -.04em; }
+.inspection-details span { color: var(--muted); font-size: 12.5px; display: block; margin-top: 6px; }
+.confidence-meter { display: flex; align-items: center; gap: 12px; }
+.confidence-track { flex: 1; height: 8px; border-radius: 5px; background: rgba(139,161,171,.14); overflow: hidden; }
+.confidence-fill { height: 100%; width: 0; border-radius: 5px; background: linear-gradient(90deg, var(--blue), var(--accent)); transition: width .6s; }
+.confidence-meter span { font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--text); }
+
+/* ALARMS */
+.alarm-list { display: grid; gap: 9px; margin-top: 16px; max-height: 290px; overflow: auto; }
+.alarm { border-left: 3px solid var(--amber); padding: 11px 13px; background: rgba(10,17,23,.7); border-radius: 0 8px 8px 0; }
+.alarm.critical { border-left-color: var(--danger); }
+.alarm.warning { border-left-color: var(--amber); }
+.alarm-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.alarm strong { font-size: 12.5px; text-transform: capitalize; }
+.alarm .sev { font-size: 9px; text-transform: uppercase; letter-spacing: .05em; padding: 2px 7px; border-radius: 99px; font-weight: 800; }
+.alarm .sev.critical { color: var(--danger); background: rgba(255,95,109,.14); }
+.alarm .sev.warning { color: var(--amber); background: rgba(255,180,84,.14); }
+.alarm p { margin: 5px 0 3px; font-size: 12px; color: var(--text); }
+.alarm small { color: var(--muted); font-size: 10.5px; font-family: "JetBrains Mono", monospace; }
+
+/* TWIN EXPLORER */
+.twin-explorer { margin-top: 16px; display: grid; gap: 8px; max-height: 290px; overflow: auto; }
+.twin-row { border: 1px solid var(--line-soft); background: rgba(10,17,23,.6); border-radius: 9px; padding: 11px 13px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.twin-row .twin-id { font-size: 12.5px; font-weight: 700; font-family: "JetBrains Mono", monospace; }
+.twin-row .twin-model { font-size: 10.5px; color: var(--muted); margin-top: 3px; }
+.twin-row .twin-state { font-size: 11px; color: var(--accent); text-align: right; white-space: nowrap; }
+
+/* FORMS + TABLE */
+.inspection-form { display: grid; gap: 13px; margin-top: 16px; }
+.inspection-form label, .configuration-dialog label { color: var(--muted); font-size: 12px; display: grid; gap: 6px; }
+.inspection-form select, .inspection-form input, .configuration-dialog input {
+  width: 100%; color: var(--text); background: #0a1218; border: 1px solid var(--line); border-radius: 9px; padding: 11px;
+}
+.inspection-form input:focus, .configuration-dialog input:focus, .inspection-form select:focus { outline: none; border-color: var(--accent); }
+.table-wrap { overflow: auto; margin-top: 14px; max-height: 290px; }
+table { border-collapse: collapse; width: 100%; font-size: 12px; }
+th { text-align: left; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--line); padding: 0 8px 10px; position: sticky; top: 0; background: var(--surface); }
+td { padding: 11px 8px; border-bottom: 1px solid var(--line-soft); }
+td .pill { text-transform: capitalize; }
+.conf-cell { font-family: "JetBrains Mono", monospace; }
+.empty-state { color: var(--muted); font-size: 13px; text-align: center; padding: 20px 0; }
+
+/* BANNER + MISC */
+.alert-banner { margin-bottom: 16px; padding: 13px 16px; border-radius: 11px; border: 1px solid rgba(255,95,109,.4); background: rgba(255,95,109,.1); color: #ffd6d9; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+.alert-banner::before { content: "⚠"; font-size: 16px; }
+.hidden { display: none !important; }
+.page-footer { display: flex; justify-content: space-between; gap: 12px; margin-top: 26px; padding-top: 16px; border-top: 1px solid var(--line-soft); font-size: 11.5px; color: var(--muted); }
+
+/* DIALOG */
+.configuration-dialog { width: min(480px, calc(100% - 32px)); color: var(--text); background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
+.configuration-dialog::backdrop { background: rgba(2,5,8,.72); backdrop-filter: blur(3px); }
+.configuration-dialog form { display: grid; gap: 16px; }
+.icon-button { border: 0; background: transparent; color: var(--muted); font-size: 26px; line-height: 1; cursor: pointer; }
+
+/* RESPONSIVE */
+@media (max-width: 1100px) {
+  .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+  .topbar-meta { display: none; }
+}
+@media (max-width: 860px) {
+  .grid-2 { grid-template-columns: 1fr; }
+  .stage-flow { grid-template-columns: 1fr; }
+  .stage-card:not(:first-child)::before { display: none; }
+  .inspection-content { grid-template-columns: 1fr; }
+  .inspection-image-wrap { height: 200px; }
+}
+@media (max-width: 560px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .topbar { flex-wrap: wrap; height: auto; padding: 12px 18px; }
+  .shell { padding: 24px 16px 40px; }
+}
+</style></head><body><div class="bg-grid"></div>
+    <div class="bg-grid" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">F</span>
+        <div class="brand-text"><span class="brand-name">FerroTwin</span><span class="brand-sub">OPERATIONS CENTER</span></div>
+      </div>
+      <div class="topbar-meta">
+        <div class="meta-pill"><span class="meta-label">FACTORY</span><span id="meta-factory" class="meta-value">—</span></div>
+        <div class="meta-pill"><span class="meta-label">MODEL</span><span id="meta-model" class="meta-value">ResNet18 · ONNX</span></div>
+        <div class="meta-pill"><span class="meta-label">INGESTION</span><span id="meta-eventmode" class="meta-value">—</span></div>
+      </div>
+      <div class="topbar-actions">
+        <div id="refresh-indicator" class="refresh-indicator" title="Auto-refresh">
+          <span class="dot"></span><span id="refresh-countdown">—</span>
+        </div>
+        <button id="pause-button" class="button ghost" title="Pause auto-refresh">Pause</button>
+        <span id="connection-status" class="connection offline">Offline</span>
+        <button id="configure-button" class="button">Connect API</button>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="page-heading">
+        <div>
+          <p class="eyebrow">LIVE PRODUCTION DIGITAL TWIN</p>
+          <h1>Factory 01 <span class="divider-slash">/</span> Line 01</h1>
+          <p id="last-updated" class="muted">Connect the API to begin streaming.</p>
+        </div>
+        <button id="refresh-button" class="button secondary">↻ Refresh now</button>
+      </section>
+
+      <section id="alert-banner" class="alert-banner hidden"></section>
+
+      <!-- KPI STRIP -->
+      <section class="kpi-grid" aria-label="Key performance indicators">
+        <article class="kpi-card accent-green">
+          <div class="kpi-top"><span class="kpi-label">Avg temperature</span><span class="kpi-icon">🌡</span></div>
+          <strong id="kpi-avg-temp">—</strong>
+          <small>across recent readings</small>
+        </article>
+        <article class="kpi-card accent-amber">
+          <div class="kpi-top"><span class="kpi-label">Peak temperature</span><span class="kpi-icon">▲</span></div>
+          <strong id="kpi-max-temp">—</strong>
+          <small id="kpi-max-temp-sub">observed maximum</small>
+        </article>
+        <article class="kpi-card accent-blue">
+          <div class="kpi-top"><span class="kpi-label">Inspections</span><span class="kpi-icon">◎</span></div>
+          <strong id="kpi-inspections">—</strong>
+          <small>AI vision events logged</small>
+        </article>
+        <article class="kpi-card accent-purple">
+          <div class="kpi-top"><span class="kpi-label">Defect rate</span><span class="kpi-icon">%</span></div>
+          <strong id="kpi-defect-rate">—</strong>
+          <small>defects / readings</small>
+        </article>
+        <article class="kpi-card accent-red">
+          <div class="kpi-top"><span class="kpi-label">Open alarms</span><span class="kpi-icon">⚠</span></div>
+          <strong id="kpi-alarms">—</strong>
+          <small id="kpi-alarms-sub">last 100 events</small>
+        </article>
+        <article class="kpi-card accent-teal">
+          <div class="kpi-top"><span class="kpi-label">Top defect</span><span class="kpi-icon">◨</span></div>
+          <strong id="kpi-top-defect" class="kpi-text">—</strong>
+          <small id="kpi-top-defect-sub">most frequent class</small>
+        </article>
+      </section>
+
+      <!-- FACTORY FLOW -->
+      <section class="panel factory-panel">
+        <div class="panel-title">
+          <div><p class="eyebrow">REAL-TIME FLOW</p><h2>Production line</h2></div>
+          <span class="tag live-tag"><span class="live-dot"></span>Live twin state</span>
+        </div>
+        <div class="stage-flow" id="stages"></div>
+      </section>
+
+      <!-- CHARTS ROW 1 -->
+      <section class="grid-2">
+        <article class="panel">
+          <div class="panel-title">
+            <div><p class="eyebrow">TELEMETRY</p><h2>Temperature trend</h2></div>
+            <div class="legend" id="temp-legend"></div>
+          </div>
+          <div class="chart-holder"><canvas id="temperature-chart"></canvas></div>
+        </article>
+        <article class="panel">
+          <div class="panel-title">
+            <div><p class="eyebrow">AI VISION</p><h2>Defect distribution</h2></div>
+            <span id="defect-total" class="tag">—</span>
+          </div>
+          <div class="chart-holder donut-holder"><canvas id="defect-donut"></canvas></div>
+        </article>
+      </section>
+
+      <!-- CHARTS ROW 2 -->
+      <section class="grid-2">
+        <article class="panel">
+          <div class="panel-title">
+            <div><p class="eyebrow">QUALITY OVER TIME</p><h2>Inspections &amp; defects</h2></div>
+          </div>
+          <div class="chart-holder"><canvas id="defect-timeline"></canvas></div>
+        </article>
+        <article class="panel inspection-panel">
+          <div class="panel-title">
+            <div><p class="eyebrow">LATEST INSPECTION</p><h2>AI vision result</h2></div>
+            <span id="inspection-confidence" class="tag">—</span>
+          </div>
+          <div class="inspection-content">
+            <div id="inspection-image-wrap" class="inspection-image-wrap"><span>No image yet</span></div>
+            <div class="inspection-body">
+              <div id="inspection-details" class="inspection-details"><strong>—</strong><span>No inspection history found.</span></div>
+              <div class="confidence-meter"><div class="confidence-track"><div id="confidence-fill" class="confidence-fill"></div></div><span id="confidence-text" class="muted">—</span></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- BOTTOM GRID -->
+      <section class="grid-2 bottom-grid">
+        <article class="panel">
+          <div class="panel-title">
+            <div><p class="eyebrow">ALARM ENGINE</p><h2>Recent alarms</h2></div>
+            <span id="alarm-count" class="tag danger">0</span>
+          </div>
+          <div id="alarms" class="alarm-list"><p class="empty-state">No alarms loaded.</p></div>
+        </article>
+        <article class="panel">
+          <div class="panel-title">
+            <div><p class="eyebrow">DIGITAL TWIN</p><h2>Twin explorer</h2></div>
+            <span id="twin-count" class="tag">0</span>
+          </div>
+          <div id="twin-explorer" class="twin-explorer"><p class="empty-state">Connect the API to inspect twins.</p></div>
+        </article>
+      </section>
+
+      <section class="grid-2 bottom-grid">
+        <article class="panel">
+          <div class="panel-title"><div><p class="eyebrow">AI INSPECTION</p><h2>Run an inspection</h2></div></div>
+          <form id="inspection-form" class="inspection-form">
+            <label>Target stage<select id="inspection-stage"></select></label>
+            <label>Inspection image<input id="inspection-file" type="file" accept="image/jpeg,image/png,image/bmp" required /></label>
+            <button class="button" type="submit">Analyze image</button>
+            <p id="inspection-result" class="muted" role="status"></p>
+          </form>
+        </article>
+        <article class="panel">
+          <div class="panel-title"><div><p class="eyebrow">HISTORY</p><h2>Recent inspections</h2></div></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Time</th><th>Stage</th><th>Defect</th><th>Confidence</th></tr></thead>
+              <tbody id="inspection-history"><tr><td colspan="4" class="empty-state">No history loaded.</td></tr></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <footer class="page-footer">
+        <span>FerroTwin · Azure Digital Twins + ONNX vision</span>
+        <span id="footer-health" class="muted">Not connected</span>
+      </footer>
+    </main>
+
+    <dialog id="configuration-dialog" class="configuration-dialog">
+      <form id="configuration-form" method="dialog">
+        <div class="dialog-heading">
+          <div><p class="eyebrow">SECURE SESSION</p><h2>Connect FerroTwin API</h2></div>
+          <button type="button" id="close-dialog" class="icon-button" aria-label="Close">×</button>
+        </div>
+        <label>Function API base URL<input id="api-url" type="url" placeholder="https://ferrotwin-func.azurewebsites.net/api" required /></label>
+        <label>Function key<input id="function-key" type="password" placeholder="Stored only in this browser tab" required /></label>
+        <p class="muted">The key stays in session storage and is sent only in the <code>x-functions-key</code> header. Nothing is committed to source control.</p>
+        <button class="button full" value="connect">Connect</button>
+      </form>
+    </dialog>
+
+    
+  <script>sessionStorage.setItem('ferrotwin-api-url','https://demo.local/api');
+sessionStorage.setItem('ferrotwin-function-key','demo');
+(function(){
+  const now = Date.now();
+  const CLS=["crazing","inclusion","patches","pitted_surface","rolled-in_scale","scratches"];
+  const base={stage01:840,stage02:770,stage03:905};
+  function series(id,n){const out=[];let v=base[id];for(let k=0;k<n;k++){v=base[id]+Math.sin(k/4)*8+(Math.random()*6-3)+(id==='stage03'&&k>n-6?42:0);out.push({PartitionKey:id,temperature:+v.toFixed(1),status:(id==='stage03'&&k>n-4)?'Error':'Running',recordedAt:new Date(now-(n-k)*3000).toISOString()});}return out.reverse();}
+  const tel={stage01:series('stage01',40),stage02:series('stage02',40),stage03:series('stage03',40)};
+  const insp=[];for(let k=0;k<48;k++){const bias=k>34?['rolled-in_scale','patches']:CLS;const d=bias[Math.floor(Math.random()*bias.length)];insp.push({PartitionKey:['stage01','stage02','stage03'][k%3],stationId:'inspection01',defect:d,confidence:0.9+Math.random()*0.099,imageUrl:'',recordedAt:new Date(now-(48-k)*8000).toISOString()});}
+  const freq={};insp.forEach(i=>freq[i.defect]=(freq[i.defect]||0)+1);
+  const temps=[].concat(tel.stage01,tel.stage02,tel.stage03).map(r=>r.temperature);
+  const alarms=[{PartitionKey:'stage03',alarmType:'high_temperature',severity:'critical',message:'Temperature 945.2C exceeds the 900.0C limit.',recordedAt:new Date(now-20000).toISOString()},{PartitionKey:'stage03',alarmType:'repeated_defect',severity:'warning',message:'3 rolled-in_scale detections in the last 30 minutes.',recordedAt:new Date(now-90000).toISOString()},{PartitionKey:'stage03',alarmType:'stage_error',severity:'critical',message:'Stage status is Error.',recordedAt:new Date(now-120000).toISOString()}];
+  const twins={items:[{$dtId:'factory01',$metadata:{$model:'dtmi:ferrotwin:Factory;2'},name:'Factory 01'},{$dtId:'line01',$metadata:{$model:'dtmi:ferrotwin:ProductionLine;2'},name:'Line 01'},{$dtId:'stage01',$metadata:{$model:'dtmi:ferrotwin:ProcessStage;3'},name:'Heating',status:'Running',temperature:tel.stage01[tel.stage01.length-1].temperature,lastDetectedDefect:''},{$dtId:'stage02',$metadata:{$model:'dtmi:ferrotwin:ProcessStage;3'},name:'Rolling',status:'Running',temperature:tel.stage02[tel.stage02.length-1].temperature,lastDetectedDefect:'scratches'},{$dtId:'stage03',$metadata:{$model:'dtmi:ferrotwin:ProcessStage;3'},name:'Cooling',status:'Error',temperature:tel.stage03[tel.stage03.length-1].temperature,lastDetectedDefect:'rolled-in_scale'},{$dtId:'inspection01',$metadata:{$model:'dtmi:ferrotwin:InspectionStation;3'},name:'Vision Station',lastDefect:insp[insp.length-1].defect,confidence:insp[insp.length-1].confidence}]};
+  const analytics={stageId:null,telemetrySamples:temps.length,inspectionCount:insp.length,averageTemperature:+(temps.reduce((a,b)=>a+b,0)/temps.length).toFixed(2),maximumTemperature:Math.max.apply(null,temps),defectFrequency:freq,defectRate:+(insp.length/temps.length).toFixed(4)};
+  const J=(o)=>Promise.resolve({ok:true,status:200,json:()=>Promise.resolve(o),blob:()=>Promise.resolve(new Blob())});
+  window.fetch=function(url){
+    if(url.indexOf('/health')>-1)return J({status:'ok',adtConnected:true,factory:'Factory 01',twinId:'factory01',model:'dtmi:ferrotwin:Factory;2',eventGridEnabled:false});
+    if(url.indexOf('/twins')>-1)return J(twins);
+    if(url.indexOf('/analytics')>-1)return J(analytics);
+    if(url.indexOf('/alarms')>-1)return J({items:alarms});
+    if(url.indexOf('/history/inspections')>-1)return J({items:insp.slice().reverse()});
+    if(url.indexOf('/history/telemetry')>-1){const m=url.match(/stageId=(stage0[123])/);return J({items:tel[m[1]].slice().reverse()});}
+    if(url.indexOf('/inspection-image')>-1)return Promise.resolve({ok:false});
+    return J({items:[]});
+  };
+})();</script><script>/* FerroTwin Operations Center — dependency-light dashboard (Chart.js from CDN). */
+
+const STAGES = [
+  { id: "stage01", name: "Heating" },
+  { id: "stage02", name: "Rolling" },
+  { id: "stage03", name: "Cooling" },
+];
+
+const DEFECT_COLORS = {
+  crazing: "#4aa8ff",
+  inclusion: "#b48ead",
+  patches: "#ffb454",
+  pitted_surface: "#35d0d6",
+  "rolled-in_scale": "#ff5f6d",
+  scratches: "#3ddc97",
+  ok: "#8ba1ab",
+};
+const STAGE_COLORS = ["#3ddc97", "#4aa8ff", "#ffb454"];
+const REFRESH_SECONDS = 5;
+const TEMP_MIN = 20, TEMP_MAX = 1000; // gauge scaling range (°C)
+
+const state = {
+  apiUrl: sessionStorage.getItem("ferrotwin-api-url") || "",
+  key: sessionStorage.getItem("ferrotwin-function-key") || "",
+  objectUrl: null,
+  stageReadings: {},
+  paused: false,
+  countdown: REFRESH_SECONDS,
+  charts: {},
+};
+
+const $ = (id) => document.getElementById(id);
+const apiUrl = () => state.apiUrl.replace(/\/$/, "");
+const headers = () => ({ "x-functions-key": state.key });
+const esc = (v) => String(v ?? "—").replace(/[&<>'"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[c]));
+const time = (v) => (v ? new Date(v).toLocaleString() : "—");
+const clock = (v) => (v ? new Date(v).toLocaleTimeString() : "—");
+const temp = (v) => (v === undefined || v === null || Number.isNaN(Number(v)) ? "—" : `${Number(v).toFixed(1)}°C`);
+const titleCase = (v) => String(v || "").replace(/[_-]/g, " ");
+
+function setConnection(status, text) { const el = $("connection-status"); el.className = `connection ${status}`; el.textContent = text; }
+async function get(path) {
+  const res = await fetch(`${apiUrl()}${path}`, { headers: headers() });
+  if (!res.ok) throw new Error(`Request failed (${res.status}) on ${path}`);
+  return res.json();
+}
+
+function fillStageSelectors() {
+  const opts = STAGES.map((s) => `<option value="${s.id}">${s.name} (${s.id})</option>`).join("");
+  $("inspection-stage").innerHTML = opts;
+}
+
+/* ---------- Chart.js theme + factories ---------- */
+function initCharts() {
+  if (!window.Chart) return;
+  Chart.defaults.color = "#8ba1ab";
+  Chart.defaults.font.family = "Inter, sans-serif";
+  Chart.defaults.font.size = 11;
+
+  state.charts.temperature = new Chart($("temperature-chart"), {
+    type: "line",
+    data: { labels: [], datasets: STAGES.map((s, i) => ({
+      label: s.name, data: [], borderColor: STAGE_COLORS[i], backgroundColor: STAGE_COLORS[i] + "22",
+      tension: 0.35, borderWidth: 2, pointRadius: 0, fill: true,
+    })) },
+    options: {
+      responsive: true, maintainAspectRatio: false, interaction: { mode: "index", intersect: false },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${c.parsed.y?.toFixed(1)}°C` } } },
+      scales: {
+        x: { grid: { color: "rgba(34,52,65,.35)" }, ticks: { maxTicksLimit: 7 } },
+        y: { grid: { color: "rgba(34,52,65,.35)" }, ticks: { callback: (v) => v + "°" } },
+      },
+    },
+  });
+
+  state.charts.donut = new Chart($("defect-donut"), {
+    type: "doughnut",
+    data: { labels: [], datasets: [{ data: [], backgroundColor: [], borderColor: "#0c141b", borderWidth: 2 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: "62%",
+      plugins: { legend: { position: "right", labels: { boxWidth: 11, padding: 12, font: { size: 11 } } } },
+    },
+  });
+
+  state.charts.timeline = new Chart($("defect-timeline"), {
+    type: "bar",
+    data: { labels: [], datasets: [] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { mode: "index" } },
+      scales: {
+        x: { stacked: true, grid: { display: false } },
+        y: { stacked: true, grid: { color: "rgba(34,52,65,.35)" }, ticks: { precision: 0 }, beginAtZero: true },
+      },
+    },
+  });
+}
+
+/* ---------- Renderers ---------- */
+function renderKpis(summary, alarms) {
+  $("kpi-avg-temp").textContent = temp(summary.averageTemperature);
+  $("kpi-max-temp").textContent = temp(summary.maximumTemperature);
+  $("kpi-inspections").textContent = summary.inspectionCount ?? "—";
+  $("kpi-defect-rate").textContent = summary.defectRate == null ? "—" : `${(summary.defectRate * 100).toFixed(1)}%`;
+  const open = alarms.filter((a) => a.severity === "critical").length;
+  $("kpi-alarms").textContent = alarms.length;
+  $("kpi-alarms-sub").textContent = open ? `${open} critical` : "no critical alarms";
+  const freq = summary.defectFrequency || {};
+  const top = Object.entries(freq).sort((a, b) => b[1] - a[1])[0];
+  $("kpi-top-defect").textContent = top ? titleCase(top[0]) : "None";
+  $("kpi-top-defect-sub").textContent = top ? `${top[1]} detections` : "no defects yet";
+}
+
+function renderStages(twins, readings) {
+  const byId = Object.fromEntries(twins.map((t) => [t.$dtId, t]));
+  $("stages").innerHTML = STAGES.map((s) => {
+    const twin = byId[s.id] || {};
+    const reading = readings[s.id]?.[0] || {};
+    const t = twin.temperature ?? reading.temperature;
+    const status = twin.status ?? reading.status ?? "Unknown";
+    const cls = /error|fault|failed/i.test(status) ? "error" : /running/i.test(status) ? "running" : "";
+    const defect = twin.lastDetectedDefect;
+    const pct = Math.max(4, Math.min(100, ((Number(t) - TEMP_MIN) / (TEMP_MAX - TEMP_MIN)) * 100)) || 4;
+    const chip = defect ? `<span class="chip">${esc(titleCase(defect))}</span>` : `<span class="chip ok">No defect</span>`;
+    return `<article class="stage-card ${cls}">
+      <div class="stage-head"><h3>${esc(twin.name || s.name)}</h3><span class="stage-status ${cls}">${esc(status)}</span></div>
+      <div class="stage-temp"><b>${t == null ? "—" : Number(t).toFixed(1)}</b><span>°C</span></div>
+      <div class="stage-gauge"><div style="width:${pct}%"></div></div>
+      <div class="stage-defect">Last defect: ${chip}</div>
+    </article>`;
+  }).join("");
+}
+
+function renderTemperatureChart() {
+  const chart = state.charts.temperature;
+  if (!chart) return;
+  const series = STAGES.map((s) => (state.stageReadings[s.id] || []).slice(0, 30).reverse());
+  const longest = series.reduce((a, b) => (b.length > a.length ? b : a), []);
+  chart.data.labels = longest.map((r) => clock(r.recordedAt));
+  series.forEach((rows, i) => { chart.data.datasets[i].data = rows.map((r) => Number(r.temperature)); });
+  chart.update("none");
+  $("temp-legend").innerHTML = STAGES.map((s, i) => `<span><i style="background:${STAGE_COLORS[i]}"></i>${s.name}</span>`).join("");
+}
+
+function renderDonut(freq) {
+  const chart = state.charts.donut;
+  if (!chart) return;
+  const entries = Object.entries(freq || {}).sort((a, b) => b[1] - a[1]);
+  chart.data.labels = entries.map(([k]) => titleCase(k));
+  chart.data.datasets[0].data = entries.map(([, v]) => v);
+  chart.data.datasets[0].backgroundColor = entries.map(([k]) => DEFECT_COLORS[k] || "#8ba1ab");
+  chart.update("none");
+  const total = entries.reduce((sum, [, v]) => sum + v, 0);
+  $("defect-total").textContent = total ? `${total} defects` : "no defects";
+}
+
+function bucketInspections(inspections, nBuckets = 8) {
+  const items = inspections.filter((i) => i.recordedAt).map((i) => ({ t: new Date(i.recordedAt).getTime(), d: i.defect || "ok" }));
+  if (!items.length) return { labels: [], classes: [], counts: [] };
+  const min = Math.min(...items.map((i) => i.t)), max = Math.max(...items.map((i) => i.t));
+  const span = Math.max(max - min, 1), width = span / nBuckets;
+  const labels = [], counts = Array.from({ length: nBuckets }, () => ({}));
+  for (let b = 0; b < nBuckets; b++) labels.push(clock(new Date(min + width * (b + 0.5))));
+  const classSet = new Set();
+  items.forEach((i) => {
+    const b = Math.min(nBuckets - 1, Math.floor((i.t - min) / width));
+    counts[b][i.d] = (counts[b][i.d] || 0) + 1;
+    classSet.add(i.d);
+  });
+  return { labels, classes: [...classSet], counts };
+}
+
+function renderTimeline(inspections) {
+  const chart = state.charts.timeline;
+  if (!chart) return;
+  const { labels, classes, counts } = bucketInspections(inspections, 8);
+  chart.data.labels = labels;
+  chart.data.datasets = (classes || []).map((c) => ({
+    label: titleCase(c), data: counts.map((b) => b[c] || 0),
+    backgroundColor: DEFECT_COLORS[c] || "#8ba1ab", borderRadius: 3, stack: "defects",
+  }));
+  chart.update("none");
+}
+
+function renderAlarms(items) {
+  $("alarm-count").textContent = items.length;
+  $("alarms").innerHTML = items.length
+    ? items.slice(0, 12).map((a) => `<div class="alarm ${esc(a.severity)}">
+        <div class="alarm-row"><strong>${esc(titleCase(a.alarmType))} · ${esc(a.PartitionKey)}</strong><span class="sev ${esc(a.severity)}">${esc(a.severity)}</span></div>
+        <p>${esc(a.message)}</p><small>${time(a.recordedAt)}</small></div>`).join("")
+    : '<p class="empty-state">No alarms recorded — line is healthy.</p>';
+  const banner = $("alert-banner");
+  const critical = items.find((a) => a.severity === "critical");
+  banner.classList.toggle("hidden", !critical);
+  banner.textContent = critical ? `Critical: ${critical.message}` : "";
+}
+
+function renderExplorer(twins) {
+  $("twin-count").textContent = twins.length;
+  const order = { Factory: 0, ProductionLine: 1, ProcessStage: 2, InspectionStation: 3 };
+  const modelName = (t) => (t.$metadata?.$model || "").split(":").pop().replace(/;.*/, "");
+  const sorted = [...twins].sort((a, b) => (order[modelName(a)] ?? 9) - (order[modelName(b)] ?? 9));
+  $("twin-explorer").innerHTML = sorted.length
+    ? sorted.map((t) => {
+        const stateText = t.temperature != null ? temp(t.temperature) : (t.lastDefect ? titleCase(t.lastDefect) : (t.status || t.name || "—"));
+        return `<div class="twin-row"><div><div class="twin-id">${esc(t.$dtId)}</div><div class="twin-model">${esc(modelName(t))}</div></div><div class="twin-state">${esc(stateText)}</div></div>`;
+      }).join("")
+    : '<p class="empty-state">No twins returned.</p>';
+}
+
+function renderHistory(items) {
+  $("inspection-history").innerHTML = items.length
+    ? items.slice(0, 10).map((i) => `<tr>
+        <td>${clock(i.recordedAt)}</td><td>${esc(i.PartitionKey)}</td>
+        <td><span class="pill" style="color:${DEFECT_COLORS[i.defect] || "#8ba1ab"}">${esc(titleCase(i.defect))}</span></td>
+        <td class="conf-cell">${(Number(i.confidence) * 100).toFixed(1)}%</td></tr>`).join("")
+    : '<tr><td colspan="4" class="empty-state">No inspection history found.</td></tr>';
+}
+
+async function renderLatestInspection(item) {
+  $("inspection-confidence").textContent = item ? `${(Number(item.confidence) * 100).toFixed(1)}%` : "—";
+  const conf = item ? Number(item.confidence) * 100 : 0;
+  $("confidence-fill").style.width = `${conf}%`;
+  $("confidence-text").textContent = item ? `${conf.toFixed(1)}% confidence` : "—";
+  $("inspection-details").innerHTML = item
+    ? `<strong style="color:${DEFECT_COLORS[item.defect] || "#eef4f6"}">${esc(titleCase(item.defect))}</strong><span>${esc(item.PartitionKey)} · ${time(item.recordedAt)}</span>`
+    : "<strong>—</strong><span>No inspection history found.</span>";
+  const wrap = $("inspection-image-wrap");
+  if (!item?.imageUrl) { wrap.innerHTML = "<span>No image</span>"; return; }
+  try {
+    const res = await fetch(`${apiUrl()}/inspection-image?blobUrl=${encodeURIComponent(item.imageUrl)}`, { headers: headers() });
+    if (!res.ok) throw new Error();
+    const blob = await res.blob();
+    if (state.objectUrl) URL.revokeObjectURL(state.objectUrl);
+    state.objectUrl = URL.createObjectURL(blob);
+    wrap.innerHTML = `<img src="${state.objectUrl}" alt="Latest ${esc(item.defect)} inspection" />`;
+  } catch { wrap.innerHTML = "<span>Private image unavailable</span>"; }
+}
+
+/* ---------- Refresh loop ---------- */
+async function refresh() {
+  if (!state.apiUrl || !state.key) { setConnection("offline", "Not connected"); return; }
+  try {
+    const [health, twins, summary, alarms, inspections, ...telemetry] = await Promise.all([
+      get("/health").catch(() => ({})),
+      get("/twins"),
+      get("/analytics?limit=500"),
+      get("/alarms?limit=50"),
+      get("/history/inspections?limit=60"),
+      ...STAGES.map((s) => get(`/history/telemetry?stageId=${s.id}&limit=50`)),
+    ]);
+    state.stageReadings = Object.fromEntries(STAGES.map((s, i) => [s.id, telemetry[i].items]));
+
+    renderKpis(summary, alarms.items);
+    renderStages(twins.items, state.stageReadings);
+    renderTemperatureChart();
+    renderDonut(summary.defectFrequency);
+    renderTimeline(inspections.items);
+    renderAlarms(alarms.items);
+    renderExplorer(twins.items);
+    renderHistory(inspections.items);
+    await renderLatestInspection(inspections.items[0]);
+
+    if (health.factory) $("meta-factory").textContent = health.factory;
+    $("meta-eventmode").textContent = health.eventGridEnabled ? "Event Grid" : "Direct";
+    $("footer-health").textContent = `ADT connected · ${twins.items.length} twins · model ${health.model || "n/a"}`;
+    $("last-updated").textContent = `Last updated ${new Date().toLocaleTimeString()}`;
+    setConnection("online", "Connected");
+    state.countdown = REFRESH_SECONDS;
+  } catch (err) {
+    console.error(err);
+    setConnection("error", "Connection failed");
+    $("last-updated").textContent = err.message;
+    $("footer-health").textContent = "Connection error";
+  }
+}
+
+function tick() {
+  if (state.paused || !state.apiUrl || !state.key) { $("refresh-countdown").textContent = state.paused ? "paused" : "—"; return; }
+  state.countdown -= 1;
+  $("refresh-countdown").textContent = `${Math.max(state.countdown, 0)}s`;
+  if (state.countdown <= 0) { state.countdown = REFRESH_SECONDS; refresh(); }
+}
+
+/* ---------- Events ---------- */
+$("configure-button").addEventListener("click", () => { $("api-url").value = state.apiUrl; $("function-key").value = state.key; $("configuration-dialog").showModal(); });
+$("close-dialog").addEventListener("click", () => $("configuration-dialog").close());
+$("configuration-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  state.apiUrl = $("api-url").value.replace(/\/$/, "");
+  state.key = $("function-key").value;
+  sessionStorage.setItem("ferrotwin-api-url", state.apiUrl);
+  sessionStorage.setItem("ferrotwin-function-key", state.key);
+  $("configuration-dialog").close();
+  refresh();
+});
+$("refresh-button").addEventListener("click", refresh);
+$("pause-button").addEventListener("click", () => {
+  state.paused = !state.paused;
+  $("pause-button").textContent = state.paused ? "Resume" : "Pause";
+  $("refresh-indicator").classList.toggle("active", !state.paused);
+});
+$("inspection-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const file = $("inspection-file").files[0];
+  if (!file) return;
+  const form = new FormData();
+  form.append("image", file);
+  form.append("stageId", $("inspection-stage").value);
+  $("inspection-result").textContent = "Uploading and running inference…";
+  try {
+    const res = await fetch(`${apiUrl()}/inspection`, { method: "POST", headers: headers(), body: form });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.message || "Inspection failed");
+    $("inspection-result").textContent = `✓ ${titleCase(result.defect)} — ${(result.confidence * 100).toFixed(1)}% confidence`;
+    $("inspection-file").value = "";
+    await refresh();
+  } catch (err) { $("inspection-result").textContent = err.message; }
+});
+
+/* ---------- Boot ---------- */
+fillStageSelectors();
+initCharts();
+$("refresh-indicator").classList.add("active");
+if (state.apiUrl && state.key) refresh();
+setInterval(tick, 1000);
+</script></body></html>

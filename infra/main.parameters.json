@@ -20,6 +20,12 @@
     "digitalTwinsName": {
     "value": "ferrotwin-adt"
     },
+    "adtHost": {
+      "value": "https://ferrotwin-adt.api.weu.digitaltwins.azure.net"
+    },
+    "dashboardAllowedOrigin": {
+      "value": "http://localhost:8080"
+    },
     "currentUserObjectId": {
   "value": "4b6dcfe8-715e-49e6-b4d6-7448ff2e6385"
     },

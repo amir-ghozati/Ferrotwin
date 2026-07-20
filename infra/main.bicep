@@ -20,6 +20,10 @@ param currentUserObjectId string
 param containerAppsEnvironmentName string
 param inferenceAppName string
 param postgresContainerName string
+@description('Azure Digital Twins host endpoint used by the Function App')
+param adtHost string
+@description('Origin allowed to call Function APIs from the standalone dashboard')
+param dashboardAllowedOrigin string = 'http://localhost:8080'
 
 @secure()
 param postgresPassword string
@@ -50,6 +54,8 @@ module workload './workload.bicep' = {
     inferenceAppName: inferenceAppName
     postgresContainerName: postgresContainerName
     postgresPassword: postgresPassword
+    adtHost: adtHost
+    dashboardAllowedOrigin: dashboardAllowedOrigin
   }
 
   dependsOn: [

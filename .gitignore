@@ -24,3 +24,18 @@ Thumbs.db
 # Logs
 *.log
 .python_packages
+__blobstorage__/
+__azurite_db_*.json
+local.settings.json
+.env
+
+local.settings.json
+__azurite_db_blob__.json
+__azurite_db_blob_extent__.json
+Neu-CLS/
+*.mp4
+*.pth
+*.onnx
+*.bak
+changes-after-deploy.diff
+

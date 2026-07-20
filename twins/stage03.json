@@ -1,0 +1,10 @@
+{
+  "name": "Cooling",
+  "status": "Idle",
+  "temperature": 25,
+  "lastDetectedDefect": "",
+  "lastDefectConfidence": 0,
+  "lastAlertLevel": "",
+  "lastAlertMessage": "",
+  "lastAlertTime": ""
+}

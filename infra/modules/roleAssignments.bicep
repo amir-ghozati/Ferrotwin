@@ -44,8 +44,8 @@ resource storage 'Microsoft.Storage/storageAccounts@2024-01-01' existing = {
   name: storageAccountName
 }
 
-resource functionBlobReader 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(storage.id, functionPrincipalId, 'Storage Blob Data Reader')
+resource functionBlobContributor 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(storage.id, functionPrincipalId, 'Storage Blob Data Contributor')
 
   scope: storage
 
@@ -55,7 +55,23 @@ resource functionBlobReader 'Microsoft.Authorization/roleAssignments@2022-04-01'
 
     roleDefinitionId: subscriptionResourceId(
       'Microsoft.Authorization/roleDefinitions',
-      '2a2b9908-6ea1-4ae2-8e65-a410df84e7d1'
+      'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
+    )
+  }
+}
+
+resource functionTableContributor 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(storage.id, functionPrincipalId, 'Storage Table Data Contributor')
+
+  scope: storage
+
+  properties: {
+    principalId: functionPrincipalId
+    principalType: 'ServicePrincipal'
+
+    roleDefinitionId: subscriptionResourceId(
+      'Microsoft.Authorization/roleDefinitions',
+      '0a9a7e1f-baf0-4e21-8d1b-8b6610f9f4f6'
     )
   }
 }

@@ -1,1 +1,27 @@
 .venv
+.git
+.vscode
+.agents
+.python_packages
+__pycache__
+*.pyc
+local.settings.json
+
+# Large / dev-only assets that must NOT ship in the Functions package
+Neu-CLS
+data
+ml
+sample_images
+dashboard
+docs
+infra
+bootstrap
+tests
+scripts
+twins
+__blobstorage__
+__queuestorage__
+__azurite_db_*.json
+AzuriteConfig
+*.md
+ferrotwin-roadmap.md

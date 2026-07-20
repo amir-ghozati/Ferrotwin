@@ -1,5 +1,5 @@
 {
-  "@id": "dtmi:ferrotwin:ProcessStage;1",
+  "@id": "dtmi:ferrotwin:ProcessStage;3",
   "@type": "Interface",
   "@context": "dtmi:dtdl:context;2",
   "displayName": "ProcessStage",
@@ -20,14 +20,39 @@
       "schema": "double"
     },
     {
+      "@type": "Property",
+      "name": "lastDetectedDefect",
+      "schema": "string"
+    },
+    {
+      "@type": "Property",
+      "name": "lastDefectConfidence",
+      "schema": "double"
+    },
+    {
+      "@type": "Property",
+      "name": "lastAlertLevel",
+      "schema": "string"
+    },
+    {
+      "@type": "Property",
+      "name": "lastAlertMessage",
+      "schema": "string"
+    },
+    {
+      "@type": "Property",
+      "name": "lastAlertTime",
+      "schema": "string"
+    },
+    {
       "@type": "Relationship",
       "name": "feedsInto",
-      "target": "dtmi:ferrotwin:ProcessStage;1"
+      "target": "dtmi:ferrotwin:ProcessStage;3"
     },
     {
       "@type": "Relationship",
       "name": "contains",
-      "target": "dtmi:ferrotwin:InspectionStation;1"
+      "target": "dtmi:ferrotwin:InspectionStation;3"
     }
   ]
 }

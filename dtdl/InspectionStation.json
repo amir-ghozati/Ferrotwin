@@ -1,5 +1,5 @@
 {
-  "@id": "dtmi:ferrotwin:InspectionStation;1",
+  "@id": "dtmi:ferrotwin:InspectionStation;3",
   "@type": "Interface",
   "@context": "dtmi:dtdl:context;2",
   "displayName": "InspectionStation",
@@ -12,6 +12,31 @@
     {
       "@type": "Property",
       "name": "cameraId",
+      "schema": "string"
+    },
+    {
+      "@type": "Property",
+      "name": "lastDefect",
+      "schema": "string"
+    },
+    {
+      "@type": "Property",
+      "name": "confidence",
+      "schema": "double"
+    },
+    {
+      "@type": "Property",
+      "name": "lastInspectionTime",
+      "schema": "string"
+    },
+    {
+      "@type": "Property",
+      "name": "lastImageUrl",
+      "schema": "string"
+    },
+    {
+      "@type": "Property",
+      "name": "lastInspectionId",
       "schema": "string"
     }
   ]

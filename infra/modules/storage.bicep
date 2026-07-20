@@ -27,5 +27,13 @@ resource poolContainer 'Microsoft.Storage/storageAccounts/blobServices/container
 
 }
 
+resource inspectionsContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2024-01-01' = {
+  name: '${storage.name}/default/inspections'
+
+  properties: {
+    publicAccess: 'None'
+  }
+}
+
 output storageId string = storage.id
 output storageName string = storage.name
